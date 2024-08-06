@@ -36,7 +36,7 @@ public class ChatService {
             System.err.println("ERROR: OPENAI_API_KEY environment variable is not set. Please set it to your OpenAI API key.");
         }
 
-        var memory = TokenWindowChatMemory.withMaxTokens(2000, new OpenAiTokenizer("gpt-3.5-turbo"));
+        var memory = TokenWindowChatMemory.withMaxTokens(2000, new OpenAiTokenizer("gpt-4o-mini"));
 
         assistant = AiServices.builder(Assistant.class)
                 .chatLanguageModel(OpenAiChatModel.withApiKey(OPENAI_API_KEY))
