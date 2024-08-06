@@ -3,7 +3,7 @@ package com.example.application;
 import com.example.application.services.CustomerService;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
-import dev.langchain4j.data.document.FileSystemDocumentLoader;
+import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
@@ -50,12 +50,12 @@ public class Application implements AppShellConfigurator {
 
     @Bean
     Tokenizer tokenizer() {
-        return new OpenAiTokenizer("GPT-4o-mini");
+        return new OpenAiTokenizer("gpt-4o-mini");
     }
 
     @Bean
     EmbeddingModel embeddingModel(){
-        return OllamaEmbeddingModel.builder().baseUrl("http://localhost:11434/api/embeddings").modelName("chatfire/bge-m3:q8_0").build();
+        return OllamaEmbeddingModel.builder().baseUrl("http://localhost:11434/api/embeddings/").modelName("chatfire/bge-m3:q8_0").build();
     }
 
     @Bean
@@ -78,7 +78,7 @@ public class Application implements AppShellConfigurator {
     @Bean
     CommandLineRunner docsToEmbeddings(EmbeddingModel embeddingModel, EmbeddingStore<TextSegment> embeddingStore, Tokenizer tokenizer, ResourceLoader loader){
         return args -> {
-            var resource = loader.getResource("classpath://documents/pdfPlumber_result.txt");
+            var resource = loader.getResource("classpath:documents/pdfPlumber_result.txt");
             var doc = FileSystemDocumentLoader.loadDocument(resource.getFile().toPath());
 
             var splitter = DocumentSplitters.recursive(100, 0, tokenizer);

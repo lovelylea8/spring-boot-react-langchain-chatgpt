@@ -9,6 +9,7 @@ import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.TokenStream;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -20,6 +21,9 @@ public class ChatService {
     private String OPENAI_API_KEY;
     private Assistant assistant;
     private StreamingAssistant streamingAssistant;
+
+    @Autowired
+    CustomerService customerService;
 
     interface Assistant {
         String chat(String message);
@@ -56,7 +60,14 @@ public class ChatService {
     public Flux<String> chatStream(String message) {
         Sinks.Many<String> sink = Sinks.many().unicast().onBackpressureBuffer();
 
+        /*
         streamingAssistant.chat(message)
+                .onNext(sink::tryEmitNext)
+                .onComplete(c -> sink.tryEmitComplete())
+                .onError(sink::tryEmitError)
+                .start();
+        */
+        customerService.chat(message)
                 .onNext(sink::tryEmitNext)
                 .onComplete(c -> sink.tryEmitComplete())
                 .onError(sink::tryEmitError)
