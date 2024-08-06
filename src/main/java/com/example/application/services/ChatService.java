@@ -132,6 +132,7 @@ public class ChatService {
         */
         streamingAssistant = AiServices.builder(StreamingAssistant.class)
                 .streamingChatLanguageModel(OpenAiStreamingChatModel.withApiKey(OPENAI_API_KEY))
+                .retrievalAugmentor(retrievalAugmentor)
                 .chatMemory(memory)
                 .build();
     }
